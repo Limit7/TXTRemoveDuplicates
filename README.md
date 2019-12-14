@@ -1,2 +1,2 @@
-# TXTRemoveDuplicate
+# TXTRemoveDuplicates
 TXT去重
