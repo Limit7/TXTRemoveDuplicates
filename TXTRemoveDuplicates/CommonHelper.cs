@@ -13,7 +13,7 @@ namespace TXTRemoveDuplicates
         /// 更新画面委托
         /// </summary>
         /// <param name="msg"></param>
-        public delegate void UpdateInfoHandler(string msg);
+        public delegate void UpdateInfoHandler(string msg, bool isClear = false);
         public UpdateInfoHandler UpdateInfo;
 
         public delegate void LoadResultHandler(bool loadResult);
@@ -21,10 +21,11 @@ namespace TXTRemoveDuplicates
 
         public delegate void CompareResultHandler(bool compareResult, int count);
         public CompareResultHandler compareResult;
+
         /// <summary>
         /// 老文件位置
         /// </summary>
-        public string OldDataPath;
+        public string[] OldDataPath;
         /// <summary>
         /// 新文件位置
         /// </summary>
@@ -48,18 +49,61 @@ namespace TXTRemoveDuplicates
         {
             DataHashSet.Clear();
         }
-        public void LoadOldData()
+        /// <summary>
+        /// 清空老数据路径
+        /// </summary>
+        public void InitializeOldDataPath()
         {
-            if (string.IsNullOrEmpty(OldDataPath))
+            if (OldDataPath != null)
+            {
+                OldDataPath.Initialize();
+            }
+        }
+        /// <summary>
+        /// 批量加载老数据
+        /// </summary>
+        public void BatchLoadData()
+        {
+            List<string> resultStr = new List<string>();
+            try
+            {
+                foreach (string item in OldDataPath)
+                {
+                    long i = 0;
+                    long count = 0;
+                    lock (this)
+                    {
+                        i = LoadOldData(item, ref count);
+                        resultStr.Add("【" + Path.GetFileName(item) + "】共加载 " + i + " 条数据，成功加载 " + count + " 条数据。");
+                    }
+                }
+                foreach (string item in resultStr)
+                {
+                    UpdateInfo(item);
+                }
+                loadResult(true);
+            }
+            catch (Exception e)
+            {
+                loadResult(false);
+                UpdateInfo("加载数据出错:" + e.Message);
+            }
+        }
+        /// <summary>
+        /// 加载老数据
+        /// </summary>
+        /// <param name="dataPath"></param>
+        public long LoadOldData(string dataPath, ref long count)
+        {
+
+            if (string.IsNullOrEmpty(dataPath))
             {
                 UpdateInfo("运行出错");
-                return;
+                return 0;
             }
-            DefaultHashSet();
-            TextReader reader = File.OpenText(OldDataPath);
-            DataHashSet = new HashSet<string>();
+            TextReader reader = File.OpenText(dataPath);
             string currentLine;
-            int idx = 0;
+            long idx = 0;
             try
             {
                 while ((currentLine = reader.ReadLine()) != null)
@@ -69,21 +113,23 @@ namespace TXTRemoveDuplicates
                         UpdateInfo("加载第 " + idx + " 条数据…");
                     }
                     currentLine = currentLine.TrimEnd();
-                    DataHashSet.Add(currentLine);
+                    if (DataHashSet.Add(currentLine))
+                    {
+                        count++;
+                    };
                 }
-                loadResult(true);
+                UpdateInfo("", true);
+                return idx;
             }
             catch (Exception e)
             {
-                UpdateInfo("加载数据出错:" + e.Message);
-                loadResult(false);
+                throw e;
             }
             finally
             {
                 reader.Close();
                 reader.Dispose();
             }
-
         }
         /// <summary>
         /// 比较新数据

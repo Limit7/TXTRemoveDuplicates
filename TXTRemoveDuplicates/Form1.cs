@@ -35,27 +35,42 @@ namespace TXTRemoveDuplicates
             BtnLoadOldData.ForeColor = Color.Black;
             BtnLoadOldData.Text = "加载老数据";
             ChbIsSave.Checked = false;
+            lbCountValue.Text = "0";
+
             commonHelper.UpdateInfo = AppendTxt;
             commonHelper.loadResult = LoadResult;
             commonHelper.compareResult = CompareResult;
-            commonHelper.OldDataPath = string.Empty;
+            commonHelper.InitializeOldDataPath();
             commonHelper.DefaultHashSet();
         }
         /// <summary>
         /// 添加消息框
         /// </summary>
         /// <param name="msg"></param>
-        private void AppendTxt(string msg)
+        private void AppendTxt(string msg, bool isClear = false)
         {
             if (TxbMsg.InvokeRequired)
             {
-                TxbMsg.BeginInvoke(new Action(() => { TxbMsg.AppendText(msg + Environment.NewLine); }));
+                TxbMsg.BeginInvoke(new Action(() =>
+                {
+                    if (isClear)
+                    {
+                        TxbMsg.Text = "";
+                    }
+                    TxbMsg.AppendText(msg + Environment.NewLine);
+                }
+                ));
             }
             else
             {
+                if (isClear)
+                {
+                    TxbMsg.Text = "";
+                }
                 TxbMsg.AppendText(msg + Environment.NewLine);
             }
         }
+
         /// <summary>
         /// 加载结果回调
         /// </summary>
@@ -65,11 +80,11 @@ namespace TXTRemoveDuplicates
             if (loadResult)
             {
                 SetBtnStatus(true);
-                AppendTxt("文件加载成功！");
+                AppendTxt("文件加载成功！库中共有：" + commonHelper.DataHashSet.Count.ToString() + " 条数据");
             }
             else
             {
-                commonHelper.OldDataPath = string.Empty;
+                commonHelper.InitializeOldDataPath();
                 commonHelper.DefaultHashSet();
                 SetBtnStatus(false);
                 AppendTxt("文件加载失败！");
@@ -99,62 +114,57 @@ namespace TXTRemoveDuplicates
                     BtnLoadOldData.BackColor = Color.Green;
                     BtnLoadOldData.ForeColor = Color.White;
                     BtnLoadOldData.Text = "数据加载成功";
+                    lbCountValue.Text = commonHelper.DataHashSet.Count.ToString();
+
                 }
                 else
                 {
                     BtnLoadOldData.BackColor = Color.Red;
                     BtnLoadOldData.ForeColor = Color.White;
                     BtnLoadOldData.Text = "数据加载失败";
+                    lbCountValue.Text = commonHelper.DataHashSet.Count.ToString();
                 }
             });
-            if (BtnLoadOldData.InvokeRequired)
-            {
-                BtnLoadOldData.BeginInvoke(actionSet);
-            }
-            else
-            {
-                BtnLoadOldData.BeginInvoke(actionSet);
-            }
+            BtnLoadOldData.BeginInvoke(actionSet);
         }
         /// <summary>
         /// 加载老数据
         /// </summary>
         /// <param name="path"></param>
-        private void LoadCompareData(string path, int opMode)
+        private void LoadCompareData(string[] path)
         {
             try
             {
-                if (commonHelper.DataHashSet.Count == 0 && opMode == 0)
+                TxbMsg.Text = "";
+                commonHelper.OldDataPath = path;
+                Thread t = new Thread(commonHelper.BatchLoadData)
                 {
-                    TxbMsg.Text = "";
-                    commonHelper.OldDataPath = path;
-                    Thread t = new Thread(commonHelper.LoadOldData);
-                    t.IsBackground = true;
-                    t.Start();
-                }
-                else if (commonHelper.DataHashSet.Count != 0 && opMode == 1)
-                {
-                    if (string.IsNullOrEmpty(commonHelper.ExportDir))
-                    {
-                        AppendTxt("请选择导出位置");
-                        return;
-                    }
-                    commonHelper.NewDataPath = path;
-                    Thread t = new Thread(commonHelper.FiltrateData);
-                    t.IsBackground = true;
-                    t.Start();
-                }
-                else
-                {
-                    AppendTxt("请加载老数据或重置程序");
-                }
+                    IsBackground = true
+                };
+                t.Start();
             }
             catch (Exception e)
             {
-                AppendTxt("运行出错:" + e.Message);
+                AppendTxt("加载数据出错:" + e.Message);
             }
         }
-
+        private void CompareNewData(string path)
+        {
+            try
+            {
+                TxbMsg.Text = "";
+                commonHelper.NewDataPath = path;
+                Thread t = new Thread(commonHelper.FiltrateData)
+                {
+                    IsBackground = true
+                };
+                t.Start();
+            }
+            catch (Exception e)
+            {
+                AppendTxt("对比出错:" + e.Message);
+            }
+        }
         /// <summary>
         /// 拖拽
         /// </summary>
@@ -165,16 +175,16 @@ namespace TXTRemoveDuplicates
             string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString(); //获得路径
             if (CheckFileTypeHelper.CheckFileExpandedName(path).Equals(".txt"))
             {
-                if (commonHelper.DataHashSet.Count == 0)
-                {
-                    TxbOldPath.Text = path;
-                    LoadCompareData(path, 0);
-                }
-                else
-                {
-                    TxbNewPath.Text = path;
-                    LoadCompareData(path, 1);
-                }
+                //if (commonHelper.DataHashSet.Count == 0)
+                //{
+                //    TxbOldPath.Text = path;
+                //    LoadCompareData(path);
+                //}
+                //else
+                //{
+                //    TxbNewPath.Text = path;
+                //    LoadCompareData(path);
+                //}
 
             }
         }
@@ -208,27 +218,24 @@ namespace TXTRemoveDuplicates
         /// <param name="e"></param>
         private void BtnLoadOldData_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(TxbOldPath.Text))
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//该值确定是否可以选择多个文件
+            dialog.Title = "请选择文件夹";
+            dialog.Filter = "所有文件(*.txt)|*.txt";
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.Multiselect = false;//该值确定是否可以选择多个文件
-                dialog.Title = "请选择文件夹";
-                dialog.Filter = "所有文件(*.txt)|*.txt";
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                string[] path = dialog.FileNames;
+                foreach (string item in path)
                 {
-                    string path = dialog.FileName;
-                    if (CheckFileTypeHelper.CheckFileExpandedName(path).Equals(".txt"))
+                    if (!CheckFileTypeHelper.CheckFileExpandedName(item).Equals(".txt"))
                     {
-                        TxbOldPath.Text = path;
-                        LoadCompareData(path, 0);
+                        AppendTxt("选中文件中包含非TXT文件，请检查!" + item);
+                        return;
                     }
                 }
+                TxbOldPath.Text = path[0];
+                LoadCompareData(path);
             }
-            else
-            {
-                LoadCompareData(TxbOldPath.Text, 0);
-            }
-
         }
         /// <summary>
         /// 加载新文件
@@ -249,13 +256,13 @@ namespace TXTRemoveDuplicates
                     if (CheckFileTypeHelper.CheckFileExpandedName(path).Equals(".txt"))
                     {
                         TxbNewPath.Text = path;
-                        LoadCompareData(path, 1);
+                        //LoadCompareData(path, 1);
                     }
                 }
             }
             else
             {
-                LoadCompareData(TxbOldPath.Text, 1);
+                //LoadCompareData(TxbOldPath.Text, 1);
             }
         }
         /// <summary>
