@@ -43,7 +43,8 @@
             // 
             // BtnLoadOldData
             // 
-            this.BtnLoadOldData.Location = new System.Drawing.Point(309, 12);
+            this.BtnLoadOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnLoadOldData.Location = new System.Drawing.Point(315, 11);
             this.BtnLoadOldData.Name = "BtnLoadOldData";
             this.BtnLoadOldData.Size = new System.Drawing.Size(117, 23);
             this.BtnLoadOldData.TabIndex = 0;
@@ -53,12 +54,15 @@
             // 
             // TxbMsg
             // 
+            this.TxbMsg.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TxbMsg.Location = new System.Drawing.Point(12, 130);
             this.TxbMsg.Multiline = true;
             this.TxbMsg.Name = "TxbMsg";
             this.TxbMsg.ReadOnly = true;
             this.TxbMsg.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxbMsg.Size = new System.Drawing.Size(414, 265);
+            this.TxbMsg.Size = new System.Drawing.Size(420, 269);
             this.TxbMsg.TabIndex = 1;
             // 
             // ChbIsSave
@@ -74,15 +78,18 @@
             // 
             // TxbOldPath
             // 
+            this.TxbOldPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TxbOldPath.Location = new System.Drawing.Point(12, 13);
             this.TxbOldPath.Name = "TxbOldPath";
             this.TxbOldPath.ReadOnly = true;
-            this.TxbOldPath.Size = new System.Drawing.Size(290, 21);
+            this.TxbOldPath.Size = new System.Drawing.Size(297, 21);
             this.TxbOldPath.TabIndex = 3;
             // 
             // BtnSetPath
             // 
-            this.BtnSetPath.Location = new System.Drawing.Point(309, 42);
+            this.BtnSetPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnSetPath.Location = new System.Drawing.Point(315, 41);
             this.BtnSetPath.Name = "BtnSetPath";
             this.BtnSetPath.Size = new System.Drawing.Size(117, 23);
             this.BtnSetPath.TabIndex = 4;
@@ -92,24 +99,29 @@
             // 
             // TxbSavePath
             // 
+            this.TxbSavePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TxbSavePath.Location = new System.Drawing.Point(12, 43);
             this.TxbSavePath.Name = "TxbSavePath";
             this.TxbSavePath.ReadOnly = true;
-            this.TxbSavePath.Size = new System.Drawing.Size(290, 21);
+            this.TxbSavePath.Size = new System.Drawing.Size(297, 21);
             this.TxbSavePath.TabIndex = 6;
             this.TxbSavePath.TextChanged += new System.EventHandler(this.TxbSavePath_TextChanged);
             // 
             // TxbNewPath
             // 
+            this.TxbNewPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TxbNewPath.Location = new System.Drawing.Point(12, 73);
             this.TxbNewPath.Name = "TxbNewPath";
             this.TxbNewPath.ReadOnly = true;
-            this.TxbNewPath.Size = new System.Drawing.Size(290, 21);
+            this.TxbNewPath.Size = new System.Drawing.Size(297, 21);
             this.TxbNewPath.TabIndex = 7;
             // 
             // BtnLoadNew
             // 
-            this.BtnLoadNew.Location = new System.Drawing.Point(309, 72);
+            this.BtnLoadNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnLoadNew.Location = new System.Drawing.Point(315, 71);
             this.BtnLoadNew.Name = "BtnLoadNew";
             this.BtnLoadNew.Size = new System.Drawing.Size(117, 23);
             this.BtnLoadNew.TabIndex = 8;
@@ -119,7 +131,8 @@
             // 
             // BtnResult
             // 
-            this.BtnResult.Location = new System.Drawing.Point(309, 101);
+            this.BtnResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnResult.Location = new System.Drawing.Point(315, 100);
             this.BtnResult.Name = "BtnResult";
             this.BtnResult.Size = new System.Drawing.Size(117, 23);
             this.BtnResult.TabIndex = 9;
@@ -129,7 +142,8 @@
             // 
             // BtnOpenExport
             // 
-            this.BtnOpenExport.Location = new System.Drawing.Point(186, 101);
+            this.BtnOpenExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnOpenExport.Location = new System.Drawing.Point(193, 101);
             this.BtnOpenExport.Name = "BtnOpenExport";
             this.BtnOpenExport.Size = new System.Drawing.Size(116, 23);
             this.BtnOpenExport.TabIndex = 10;
@@ -142,7 +156,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 405);
+            this.ClientSize = new System.Drawing.Size(444, 411);
             this.Controls.Add(this.BtnOpenExport);
             this.Controls.Add(this.BtnResult);
             this.Controls.Add(this.BtnLoadNew);
@@ -155,7 +169,9 @@
             this.Controls.Add(this.BtnLoadOldData);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(460, 450);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TXT去重---极限";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);

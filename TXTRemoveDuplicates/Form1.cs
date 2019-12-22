@@ -128,8 +128,10 @@ namespace TXTRemoveDuplicates
                 {
                     TxbMsg.Text = "";
                     commonHelper.OldDataPath = path;
-                    Thread t = new Thread(commonHelper.LoadOldData);
-                    t.IsBackground = true;
+                    Thread t = new Thread(commonHelper.LoadOldData)
+                    {
+                        IsBackground = true
+                    };
                     t.Start();
                 }
                 else if (commonHelper.DataHashSet.Count != 0 && opMode == 1)
@@ -162,7 +164,7 @@ namespace TXTRemoveDuplicates
         /// <param name="e"></param>
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
-            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString(); //获得路径
+            string path = ((Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString(); //获得路径
             if (CheckFileTypeHelper.CheckFileExpandedName(path).Equals(".txt"))
             {
                 if (commonHelper.DataHashSet.Count == 0)
@@ -210,10 +212,12 @@ namespace TXTRemoveDuplicates
         {
             if (string.IsNullOrEmpty(TxbOldPath.Text))
             {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.Multiselect = false;//该值确定是否可以选择多个文件
-                dialog.Title = "请选择文件夹";
-                dialog.Filter = "所有文件(*.txt)|*.txt";
+                OpenFileDialog dialog = new OpenFileDialog
+                {
+                    Multiselect = false,//该值确定是否可以选择多个文件
+                    Title = "请选择文件夹",
+                    Filter = "所有文件(*.txt)|*.txt"
+                };
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     string path = dialog.FileName;
@@ -239,10 +243,12 @@ namespace TXTRemoveDuplicates
         {
             if (string.IsNullOrEmpty(TxbNewPath.Text))
             {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.Multiselect = false;//该值确定是否可以选择多个文件
-                dialog.Title = "请选择文件夹";
-                dialog.Filter = "所有文件(*.txt)|*.txt";
+                OpenFileDialog dialog = new OpenFileDialog
+                {
+                    Multiselect = false,//该值确定是否可以选择多个文件
+                    Title = "请选择文件夹",
+                    Filter = "所有文件(*.txt)|*.txt"
+                };
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     string path = dialog.FileName;
