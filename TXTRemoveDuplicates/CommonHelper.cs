@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using TXTRemoveDuplicates.Model;
 
 namespace TXTRemoveDuplicates
 {
@@ -41,13 +42,13 @@ namespace TXTRemoveDuplicates
         /// <summary>
         /// 保存数据用HashSet
         /// </summary>
-        public HashSet<string> DataHashSet = new HashSet<string>();
+        public HashSet<string> OldDataHashSet = new HashSet<string>();
         /// <summary>
         /// 清空数据
         /// </summary>
         public void DefaultHashSet()
         {
-            DataHashSet.Clear();
+            OldDataHashSet.Clear();
         }
         /// <summary>
         /// 清空老数据路径
@@ -95,40 +96,41 @@ namespace TXTRemoveDuplicates
         /// <param name="dataPath"></param>
         public long LoadOldData(string dataPath, ref long count)
         {
-
             if (string.IsNullOrEmpty(dataPath))
             {
                 UpdateInfo("运行出错");
                 return 0;
             }
-            TextReader reader = File.OpenText(dataPath);
             string currentLine;
             long idx = 0;
-            try
+            using (TextReader reader = File.OpenText(dataPath))
             {
-                while ((currentLine = reader.ReadLine()) != null)
+                try
                 {
-                    if ((++idx % 10000) == 0)
+                    while ((currentLine = reader.ReadLine()) != null)
                     {
-                        UpdateInfo("加载第 " + idx + " 条数据…");
+                        if ((++idx % 10000) == 0)
+                        {
+                            UpdateInfo("加载第 " + idx + " 条数据…");
+                        }
+                        currentLine = currentLine.TrimEnd();
+                        if (OldDataHashSet.Add(currentLine))
+                        {
+                            count++;
+                        };
                     }
-                    currentLine = currentLine.TrimEnd();
-                    if (DataHashSet.Add(currentLine))
-                    {
-                        count++;
-                    };
+                    UpdateInfo("", true);
+                    return idx;
                 }
-                UpdateInfo("", true);
-                return idx;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            finally
-            {
-                reader.Close();
-                reader.Dispose();
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
             }
         }
         /// <summary>
@@ -136,7 +138,7 @@ namespace TXTRemoveDuplicates
         /// </summary>
         public void FiltrateData()
         {
-            if (string.IsNullOrEmpty(NewDataPath) || string.IsNullOrEmpty(ExportDir) || DataHashSet.Count == 0)
+            if (string.IsNullOrEmpty(NewDataPath) || string.IsNullOrEmpty(ExportDir) || OldDataHashSet.Count == 0)
             {
                 UpdateInfo("运行出错");
                 return;
@@ -159,7 +161,7 @@ namespace TXTRemoveDuplicates
                         UpdateInfo("正在比较 " + idx + " 条数据…");
                     }
                     currentLine = currentLine.TrimEnd();
-                    if (DataHashSet.Add(currentLine))
+                    if (OldDataHashSet.Add(currentLine))
                     {
                         withoutRepetData.WriteLine(currentLine);
                         count++;
@@ -177,7 +179,6 @@ namespace TXTRemoveDuplicates
             catch (Exception e)
             {
                 UpdateInfo("去重出错:" + e.Message);
-                throw;
             }
             finally
             {
@@ -187,6 +188,43 @@ namespace TXTRemoveDuplicates
                 reader.Dispose();
                 repetData.Dispose();
                 withoutRepetData.Dispose();
+            }
+        }
+        /// <summary>
+        /// 写入到txt
+        /// </summary>
+        /// <param name="WriteData"></param>
+        /// <param name="TxtName"></param>
+        public void WriteDateToTxt(WriteDataClass Wdata)
+        {
+            if (string.IsNullOrEmpty(Wdata.TxtName) || Wdata.WriteDataHashSet.Count == 0)
+            {
+                UpdateInfo("数据导出出错,数据为空!");
+                return;
+            }
+            string ExportFilePath = ExportDir + Wdata.TxtName + ".txt";
+            TextWriter TxtWriter = File.CreateText(ExportFilePath);
+            int k = 0;
+            try
+            {
+                foreach (string item in Wdata.WriteDataHashSet)
+                {
+                    if ((++k % 10000) == 0)
+                    {
+                        UpdateInfo("正在导出 " + k + " 条数据…");
+                    }
+                    TxtWriter.WriteLine(item);
+                }
+                UpdateInfo("数据导出成功!共 " + k + "条数据【" + ExportFilePath + "】");
+            }
+            catch (Exception e)
+            {
+                UpdateInfo("数据导出出错:" + e.Message);
+            }
+            finally
+            {
+                TxtWriter.Close();
+                TxtWriter.Dispose();
             }
         }
     }

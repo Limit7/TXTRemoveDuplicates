@@ -41,14 +41,16 @@
             this.BtnOpenExport = new System.Windows.Forms.Button();
             this.lbCount = new System.Windows.Forms.Label();
             this.lbCountValue = new System.Windows.Forms.Label();
+            this.BtnWriteOldData = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnLoadOldData
             // 
             this.BtnLoadOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnLoadOldData.Location = new System.Drawing.Point(362, 12);
+            this.BtnLoadOldData.Location = new System.Drawing.Point(483, 15);
+            this.BtnLoadOldData.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.BtnLoadOldData.Name = "BtnLoadOldData";
-            this.BtnLoadOldData.Size = new System.Drawing.Size(117, 23);
+            this.BtnLoadOldData.Size = new System.Drawing.Size(156, 29);
             this.BtnLoadOldData.TabIndex = 0;
             this.BtnLoadOldData.Text = "加载老数据";
             this.BtnLoadOldData.UseVisualStyleBackColor = true;
@@ -60,20 +62,22 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TxbMsg.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.TxbMsg.Location = new System.Drawing.Point(12, 130);
+            this.TxbMsg.Location = new System.Drawing.Point(16, 162);
+            this.TxbMsg.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TxbMsg.Multiline = true;
             this.TxbMsg.Name = "TxbMsg";
             this.TxbMsg.ReadOnly = true;
             this.TxbMsg.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxbMsg.Size = new System.Drawing.Size(467, 271);
+            this.TxbMsg.Size = new System.Drawing.Size(621, 338);
             this.TxbMsg.TabIndex = 1;
             // 
             // ChbIsSave
             // 
             this.ChbIsSave.AutoSize = true;
-            this.ChbIsSave.Location = new System.Drawing.Point(12, 99);
+            this.ChbIsSave.Location = new System.Drawing.Point(16, 124);
+            this.ChbIsSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ChbIsSave.Name = "ChbIsSave";
-            this.ChbIsSave.Size = new System.Drawing.Size(120, 16);
+            this.ChbIsSave.Size = new System.Drawing.Size(149, 19);
             this.ChbIsSave.TabIndex = 2;
             this.ChbIsSave.Text = "是否另存重复数据";
             this.ChbIsSave.UseVisualStyleBackColor = true;
@@ -83,18 +87,20 @@
             // 
             this.TxbOldPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxbOldPath.Location = new System.Drawing.Point(12, 13);
+            this.TxbOldPath.Location = new System.Drawing.Point(16, 16);
+            this.TxbOldPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TxbOldPath.Name = "TxbOldPath";
             this.TxbOldPath.ReadOnly = true;
-            this.TxbOldPath.Size = new System.Drawing.Size(343, 21);
+            this.TxbOldPath.Size = new System.Drawing.Size(456, 25);
             this.TxbOldPath.TabIndex = 3;
             // 
             // BtnSetPath
             // 
             this.BtnSetPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnSetPath.Location = new System.Drawing.Point(362, 42);
+            this.BtnSetPath.Location = new System.Drawing.Point(483, 52);
+            this.BtnSetPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.BtnSetPath.Name = "BtnSetPath";
-            this.BtnSetPath.Size = new System.Drawing.Size(117, 23);
+            this.BtnSetPath.Size = new System.Drawing.Size(156, 29);
             this.BtnSetPath.TabIndex = 4;
             this.BtnSetPath.Text = "设置保存位置";
             this.BtnSetPath.UseVisualStyleBackColor = true;
@@ -104,10 +110,11 @@
             // 
             this.TxbSavePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxbSavePath.Location = new System.Drawing.Point(12, 43);
+            this.TxbSavePath.Location = new System.Drawing.Point(16, 54);
+            this.TxbSavePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TxbSavePath.Name = "TxbSavePath";
             this.TxbSavePath.ReadOnly = true;
-            this.TxbSavePath.Size = new System.Drawing.Size(343, 21);
+            this.TxbSavePath.Size = new System.Drawing.Size(456, 25);
             this.TxbSavePath.TabIndex = 6;
             this.TxbSavePath.TextChanged += new System.EventHandler(this.TxbSavePath_TextChanged);
             // 
@@ -115,18 +122,20 @@
             // 
             this.TxbNewPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxbNewPath.Location = new System.Drawing.Point(12, 73);
+            this.TxbNewPath.Location = new System.Drawing.Point(16, 91);
+            this.TxbNewPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TxbNewPath.Name = "TxbNewPath";
             this.TxbNewPath.ReadOnly = true;
-            this.TxbNewPath.Size = new System.Drawing.Size(343, 21);
+            this.TxbNewPath.Size = new System.Drawing.Size(456, 25);
             this.TxbNewPath.TabIndex = 7;
             // 
             // BtnLoadNew
             // 
             this.BtnLoadNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnLoadNew.Location = new System.Drawing.Point(362, 72);
+            this.BtnLoadNew.Location = new System.Drawing.Point(483, 90);
+            this.BtnLoadNew.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.BtnLoadNew.Name = "BtnLoadNew";
-            this.BtnLoadNew.Size = new System.Drawing.Size(117, 23);
+            this.BtnLoadNew.Size = new System.Drawing.Size(156, 29);
             this.BtnLoadNew.TabIndex = 8;
             this.BtnLoadNew.Text = "选择新文件并比较";
             this.BtnLoadNew.UseVisualStyleBackColor = true;
@@ -135,9 +144,10 @@
             // BtnResult
             // 
             this.BtnResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnResult.Location = new System.Drawing.Point(362, 101);
+            this.BtnResult.Location = new System.Drawing.Point(483, 126);
+            this.BtnResult.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.BtnResult.Name = "BtnResult";
-            this.BtnResult.Size = new System.Drawing.Size(117, 23);
+            this.BtnResult.Size = new System.Drawing.Size(156, 29);
             this.BtnResult.TabIndex = 9;
             this.BtnResult.Text = "重置并清空";
             this.BtnResult.UseVisualStyleBackColor = true;
@@ -146,9 +156,10 @@
             // BtnOpenExport
             // 
             this.BtnOpenExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnOpenExport.Location = new System.Drawing.Point(239, 101);
+            this.BtnOpenExport.Location = new System.Drawing.Point(350, 126);
+            this.BtnOpenExport.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.BtnOpenExport.Name = "BtnOpenExport";
-            this.BtnOpenExport.Size = new System.Drawing.Size(116, 23);
+            this.BtnOpenExport.Size = new System.Drawing.Size(122, 29);
             this.BtnOpenExport.TabIndex = 10;
             this.BtnOpenExport.Text = "打开导出位置";
             this.BtnOpenExport.UseVisualStyleBackColor = true;
@@ -157,27 +168,41 @@
             // lbCount
             // 
             this.lbCount.AutoSize = true;
-            this.lbCount.Location = new System.Drawing.Point(10, 115);
+            this.lbCount.Location = new System.Drawing.Point(13, 144);
+            this.lbCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbCount.Name = "lbCount";
-            this.lbCount.Size = new System.Drawing.Size(47, 12);
+            this.lbCount.Size = new System.Drawing.Size(60, 15);
             this.lbCount.TabIndex = 11;
             this.lbCount.Text = "库总量:";
             // 
             // lbCountValue
             // 
             this.lbCountValue.AutoSize = true;
-            this.lbCountValue.Location = new System.Drawing.Point(63, 115);
+            this.lbCountValue.Location = new System.Drawing.Point(84, 144);
+            this.lbCountValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbCountValue.Name = "lbCountValue";
-            this.lbCountValue.Size = new System.Drawing.Size(11, 12);
+            this.lbCountValue.Size = new System.Drawing.Size(15, 15);
             this.lbCountValue.TabIndex = 12;
             this.lbCountValue.Text = "0";
+            // 
+            // BtnWriteOldData
+            // 
+            this.BtnWriteOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnWriteOldData.Location = new System.Drawing.Point(245, 126);
+            this.BtnWriteOldData.Name = "BtnWriteOldData";
+            this.BtnWriteOldData.Size = new System.Drawing.Size(98, 29);
+            this.BtnWriteOldData.TabIndex = 13;
+            this.BtnWriteOldData.Text = "导出库数据";
+            this.BtnWriteOldData.UseVisualStyleBackColor = true;
+            this.BtnWriteOldData.Click += new System.EventHandler(this.BtnWriteOldData_Click);
             // 
             // MainForm
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(490, 411);
+            this.ClientSize = new System.Drawing.Size(653, 514);
+            this.Controls.Add(this.BtnWriteOldData);
             this.Controls.Add(this.lbCountValue);
             this.Controls.Add(this.lbCount);
             this.Controls.Add(this.BtnOpenExport);
@@ -192,8 +217,9 @@
             this.Controls.Add(this.BtnLoadOldData);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(460, 450);
+            this.MinimumSize = new System.Drawing.Size(607, 551);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TXT去重---极限";
@@ -219,6 +245,7 @@
         private System.Windows.Forms.Button BtnOpenExport;
         private System.Windows.Forms.Label lbCount;
         private System.Windows.Forms.Label lbCountValue;
+        private System.Windows.Forms.Button BtnWriteOldData;
     }
 }
 

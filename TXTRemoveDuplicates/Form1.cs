@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using TXTRemoveDuplicates.Model;
 
 namespace TXTRemoveDuplicates
 {
@@ -42,6 +43,7 @@ namespace TXTRemoveDuplicates
             commonHelper.compareResult = CompareResult;
             commonHelper.InitializeOldDataPath();
             commonHelper.DefaultHashSet();
+            GC.Collect();
         }
         /// <summary>
         /// 添加消息框
@@ -80,7 +82,7 @@ namespace TXTRemoveDuplicates
             if (loadResult)
             {
                 SetBtnStatus(true);
-                AppendTxt("文件加载成功！库中共有：" + commonHelper.DataHashSet.Count.ToString() + " 条数据");
+                AppendTxt("文件加载成功！库中共有：" + commonHelper.OldDataHashSet.Count.ToString() + " 条数据");
             }
             else
             {
@@ -113,8 +115,8 @@ namespace TXTRemoveDuplicates
                 {
                     BtnLoadOldData.BackColor = Color.Green;
                     BtnLoadOldData.ForeColor = Color.White;
-                    BtnLoadOldData.Text = "数据加载成功";
-                    lbCountValue.Text = commonHelper.DataHashSet.Count.ToString();
+                    BtnLoadOldData.Text = "继续添加数据";
+                    lbCountValue.Text = commonHelper.OldDataHashSet.Count.ToString();
 
                 }
                 else
@@ -122,7 +124,7 @@ namespace TXTRemoveDuplicates
                     BtnLoadOldData.BackColor = Color.Red;
                     BtnLoadOldData.ForeColor = Color.White;
                     BtnLoadOldData.Text = "数据加载失败";
-                    lbCountValue.Text = commonHelper.DataHashSet.Count.ToString();
+                    lbCountValue.Text = commonHelper.OldDataHashSet.Count.ToString();
                 }
             });
             BtnLoadOldData.BeginInvoke(actionSet);
@@ -148,6 +150,10 @@ namespace TXTRemoveDuplicates
                 AppendTxt("加载数据出错:" + e.Message);
             }
         }
+        /// <summary>
+        /// 比较数据
+        /// </summary>
+        /// <param name="path"></param>
         private void CompareNewData(string path)
         {
             try
@@ -207,9 +213,11 @@ namespace TXTRemoveDuplicates
         /// <param name="e"></param>
         private void BtnSetPath_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog path = new FolderBrowserDialog();
-            path.ShowDialog();
-            TxbSavePath.Text = path.SelectedPath;
+            using (FolderBrowserDialog path = new FolderBrowserDialog())
+                if (path.ShowDialog() == DialogResult.OK)
+                {
+                    TxbSavePath.Text = path.SelectedPath;
+                }
         }
         /// <summary>
         /// 加载老文件
@@ -218,23 +226,25 @@ namespace TXTRemoveDuplicates
         /// <param name="e"></param>
         private void BtnLoadOldData_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = true;//该值确定是否可以选择多个文件
-            dialog.Title = "请选择文件夹";
-            dialog.Filter = "所有文件(*.txt)|*.txt";
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            using (OpenFileDialog dialog = new OpenFileDialog())
             {
-                string[] path = dialog.FileNames;
-                foreach (string item in path)
+                dialog.Multiselect = true;//该值确定是否可以选择多个文件
+                dialog.Title = "请选择文件夹";
+                dialog.Filter = "所有文件(*.txt)|*.txt";
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (!CheckFileTypeHelper.CheckFileExpandedName(item).Equals(".txt"))
+                    string[] path = dialog.FileNames;
+                    foreach (string item in path)
                     {
-                        AppendTxt("选中文件中包含非TXT文件，请检查!" + item);
-                        return;
+                        if (!CheckFileTypeHelper.CheckFileExpandedName(item).Equals(".txt"))
+                        {
+                            AppendTxt("选中文件中包含非TXT文件，请检查!" + item);
+                            return;
+                        }
                     }
+                    TxbOldPath.Text = path[0];
+                    LoadCompareData(path);
                 }
-                TxbOldPath.Text = path[0];
-                LoadCompareData(path);
             }
         }
         /// <summary>
@@ -244,25 +254,25 @@ namespace TXTRemoveDuplicates
         /// <param name="e"></param>
         private void BtnLoadNew_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(TxbNewPath.Text))
+            if (commonHelper.OldDataHashSet.Count == 0)
             {
-                OpenFileDialog dialog = new OpenFileDialog();
+                AppendTxt("库中没有数据！");
+                return;
+            }
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
                 dialog.Multiselect = false;//该值确定是否可以选择多个文件
                 dialog.Title = "请选择文件夹";
                 dialog.Filter = "所有文件(*.txt)|*.txt";
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     string path = dialog.FileName;
                     if (CheckFileTypeHelper.CheckFileExpandedName(path).Equals(".txt"))
                     {
                         TxbNewPath.Text = path;
-                        //LoadCompareData(path, 1);
+                        CompareNewData(path);
                     }
                 }
-            }
-            else
-            {
-                //LoadCompareData(TxbOldPath.Text, 1);
             }
         }
         /// <summary>
@@ -295,10 +305,29 @@ namespace TXTRemoveDuplicates
             System.Diagnostics.Process.Start(psi);
             //System.Diagnostics.Process.Start("Explorer", "/select," + TxbSavePath.Text + "\\" + "不重复数据.txt");
         }
-
+        /// <summary>
+        /// 是否保存不重复文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChbIsSave_CheckedChanged(object sender, EventArgs e)
         {
             commonHelper.isSaveDuplicatesData = ChbIsSave.Checked;
+        }
+
+        private void BtnWriteOldData_Click(object sender, EventArgs e)
+        {
+            WriteDataClass Wdata = new WriteDataClass()
+            {
+                WriteDataHashSet = commonHelper.OldDataHashSet,
+                TxtName = "老数据"
+
+            };
+            Thread t = new Thread(() => { commonHelper.WriteDateToTxt(Wdata); })
+            {
+                IsBackground = true
+            };
+            t.Start();
         }
     }
 }
