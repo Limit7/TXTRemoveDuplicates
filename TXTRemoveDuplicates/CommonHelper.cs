@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using TXTRemoveDuplicates.Model;
 
 namespace TXTRemoveDuplicates
@@ -43,12 +40,14 @@ namespace TXTRemoveDuplicates
         /// 保存数据用HashSet
         /// </summary>
         public HashSet<string> OldDataHashSet = new HashSet<string>();
+        public HashSet<string> CompareData = new HashSet<string>();
         /// <summary>
         /// 清空数据
         /// </summary>
         public void DefaultHashSet()
         {
             OldDataHashSet.Clear();
+            CompareData.Clear();
         }
         /// <summary>
         /// 清空老数据路径
@@ -83,6 +82,7 @@ namespace TXTRemoveDuplicates
                     UpdateInfo(item);
                 }
                 loadResult(true);
+                CompareData = new HashSet<string>(OldDataHashSet);
             }
             catch (Exception e)
             {
@@ -101,10 +101,10 @@ namespace TXTRemoveDuplicates
                 UpdateInfo("运行出错");
                 return 0;
             }
-            string currentLine;
-            long idx = 0;
             using (TextReader reader = File.OpenText(dataPath))
             {
+                string currentLine;
+                long idx = 0;
                 try
                 {
                     while ((currentLine = reader.ReadLine()) != null)
@@ -143,51 +143,54 @@ namespace TXTRemoveDuplicates
                 UpdateInfo("运行出错");
                 return;
             }
-            TextReader reader = File.OpenText(NewDataPath);
-            string[] exportFile = new string[2];
-            exportFile[0] = ExportDir + "重复数据.txt";
-            exportFile[1] = ExportDir + "不重复数据.txt";
-            TextWriter repetData = File.CreateText(exportFile[0]);
-            TextWriter withoutRepetData = File.CreateText(exportFile[1]);
-            string currentLine;
-            int idx = 0;
-            int count = 0;
-            try
+            using (TextReader reader = File.OpenText(NewDataPath))
             {
-                while ((currentLine = reader.ReadLine()) != null)
+                string[] exportFile = new string[2];
+                exportFile[0] = ExportDir + "重复数据.txt";
+                exportFile[1] = ExportDir + "不重复数据.txt";
+                TextWriter repetData = File.CreateText(exportFile[0]);
+                TextWriter withoutRepetData = File.CreateText(exportFile[1]);
+                string currentLine;
+                int idx = 0;
+                int count = 0;
+                try
                 {
-                    if ((++idx % 10000) == 0)
+                    while ((currentLine = reader.ReadLine()) != null)
                     {
-                        UpdateInfo("正在比较 " + idx + " 条数据…");
-                    }
-                    currentLine = currentLine.TrimEnd();
-                    if (OldDataHashSet.Add(currentLine))
-                    {
-                        withoutRepetData.WriteLine(currentLine);
-                        count++;
-                    }
-                    else
-                    {
-                        if (isSaveDuplicatesData)
+                        if ((++idx % 10000) == 0)
                         {
-                            repetData.WriteLine(currentLine);
+                            UpdateInfo("正在比较 " + idx + " 条数据…");
+                        }
+                        currentLine = currentLine.TrimEnd();
+                        if (CompareData.Add(currentLine))
+                        {
+                            withoutRepetData.WriteLine(currentLine);
+                            count++;
+                        }
+                        else
+                        {
+                            if (isSaveDuplicatesData)
+                            {
+                                repetData.WriteLine(currentLine);
+                            }
                         }
                     }
+                    UpdateInfo("去重成功！不重复数据：" + count + "条");
                 }
-                UpdateInfo("去重成功！不重复数据：" + count + "条");
-            }
-            catch (Exception e)
-            {
-                UpdateInfo("去重出错:" + e.Message);
-            }
-            finally
-            {
-                reader.Close();
-                repetData.Close();
-                withoutRepetData.Close();
-                reader.Dispose();
-                repetData.Dispose();
-                withoutRepetData.Dispose();
+                catch (Exception e)
+                {
+                    UpdateInfo("去重出错:" + e.Message);
+                }
+                finally
+                {
+                    reader.Close();
+                    repetData.Close();
+                    withoutRepetData.Close();
+                    reader.Dispose();
+                    repetData.Dispose();
+                    withoutRepetData.Dispose();
+                    CompareData.Clear();
+                }
             }
         }
         /// <summary>
@@ -202,29 +205,31 @@ namespace TXTRemoveDuplicates
                 UpdateInfo("数据导出出错,数据为空!");
                 return;
             }
-            string ExportFilePath = ExportDir + Wdata.TxtName + ".txt";
-            TextWriter TxtWriter = File.CreateText(ExportFilePath);
-            int k = 0;
-            try
+            string ExportFilePath = ExportDir + Wdata.TxtName + Wdata.WriteDataHashSet.Count + ".txt";
+            using (TextWriter TxtWriter = File.CreateText(ExportFilePath))
             {
-                foreach (string item in Wdata.WriteDataHashSet)
+                int k = 0;
+                try
                 {
-                    if ((++k % 10000) == 0)
+                    foreach (string item in Wdata.WriteDataHashSet)
                     {
-                        UpdateInfo("正在导出 " + k + " 条数据…");
+                        if ((++k % 10000) == 0)
+                        {
+                            UpdateInfo("正在导出 " + k + " 条数据…");
+                        }
+                        TxtWriter.WriteLine(item);
                     }
-                    TxtWriter.WriteLine(item);
+                    UpdateInfo("数据导出成功!共 " + k + "条数据【" + ExportFilePath + "】");
                 }
-                UpdateInfo("数据导出成功!共 " + k + "条数据【" + ExportFilePath + "】");
-            }
-            catch (Exception e)
-            {
-                UpdateInfo("数据导出出错:" + e.Message);
-            }
-            finally
-            {
-                TxtWriter.Close();
-                TxtWriter.Dispose();
+                catch (Exception e)
+                {
+                    UpdateInfo("数据导出出错:" + e.Message);
+                }
+                finally
+                {
+                    TxtWriter.Close();
+                    TxtWriter.Dispose();
+                }
             }
         }
     }

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using TXTRemoveDuplicates.Model;
@@ -37,6 +32,7 @@ namespace TXTRemoveDuplicates
             BtnLoadOldData.Text = "加载老数据";
             ChbIsSave.Checked = false;
             lbCountValue.Text = "0";
+            PnlParent.Visible = false;
 
             commonHelper.UpdateInfo = AppendTxt;
             commonHelper.loadResult = LoadResult;
@@ -172,39 +168,21 @@ namespace TXTRemoveDuplicates
             }
         }
         /// <summary>
-        /// 拖拽
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
-        {
-            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString(); //获得路径
-            if (CheckFileTypeHelper.CheckFileExpandedName(path).Equals(".txt"))
-            {
-                //if (commonHelper.DataHashSet.Count == 0)
-                //{
-                //    TxbOldPath.Text = path;
-                //    LoadCompareData(path);
-                //}
-                //else
-                //{
-                //    TxbNewPath.Text = path;
-                //    LoadCompareData(path);
-                //}
-
-            }
-        }
-        /// <summary>
-        /// 拖拽
+        /// 拖拽事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
                 e.Effect = DragDropEffects.All; //重要代码：表明是所有类型的数据，比如文件路径
+                PnlParent.Visible = true;
+            }
             else
+            {
                 e.Effect = DragDropEffects.None;
+            }
         }
         /// <summary>
         /// 设置保存位置
@@ -328,6 +306,67 @@ namespace TXTRemoveDuplicates
                 IsBackground = true
             };
             t.Start();
+        }
+        private void PnlLoad_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] path = (string[])e.Data.GetData(DataFormats.FileDrop); //获得路径
+            PnlParent.Visible = false;
+            foreach (string item in path)
+            {
+                if (!CheckFileTypeHelper.CheckFileExpandedName(item).Equals(".txt"))
+                {
+                    AppendTxt("选中文件中包含非TXT文件，请检查!" + item);
+                    return;
+                }
+            }
+            TxbOldPath.Text = path[0];
+            LoadCompareData(path);
+        }
+        private void PnlLoad_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.All; //重要代码：表明是所有类型的数据，比如文件路径
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void PnlLoad_DragLeave(object sender, EventArgs e)
+        {
+            PnlParent.Visible = false;
+        }
+
+        private void PnlCompare_DragDrop(object sender, DragEventArgs e)
+        {
+            string path = ((Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString(); //获得路径
+            PnlParent.Visible = false;
+            if (!CheckFileTypeHelper.CheckFileExpandedName(path).Equals(".txt"))
+            {
+                AppendTxt("选中文件中包含非TXT文件，请检查!" + path);
+                return;
+            }
+            TxbNewPath.Text = path;
+            CompareNewData(path);
+        }
+
+        private void PnlCompare_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.All; //重要代码：表明是所有类型的数据，比如文件路径
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void PnlCompare_DragLeave(object sender, EventArgs e)
+        {
+            PnlParent.Visible = false;
         }
     }
 }
