@@ -175,7 +175,7 @@ namespace TXTRemoveDuplicates
                             }
                         }
                     }
-                    UpdateInfo("去重成功！不重复数据：" + count + "条");
+                    UpdateInfo("去重成功！不重复数据：" + count + "条", true);
                 }
                 catch (Exception e)
                 {
