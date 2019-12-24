@@ -13,6 +13,10 @@ namespace TXTRemoveDuplicates
         public MainForm()
         {
             InitializeComponent();
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true); // 禁止擦除背景.  
+            SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲  
+
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -165,23 +169,6 @@ namespace TXTRemoveDuplicates
             catch (Exception e)
             {
                 AppendTxt("对比出错:" + e.Message);
-            }
-        }
-        /// <summary>
-        /// 拖拽事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainForm_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.All; //重要代码：表明是所有类型的数据，比如文件路径
-                PnlParent.Visible = true;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
             }
         }
         /// <summary>
@@ -367,6 +354,11 @@ namespace TXTRemoveDuplicates
         private void PnlCompare_DragLeave(object sender, EventArgs e)
         {
             PnlParent.Visible = false;
+        }
+
+        private void TxbMsg_DragEnter(object sender, DragEventArgs e)
+        {
+            PnlParent.Visible = true;
         }
     }
 }

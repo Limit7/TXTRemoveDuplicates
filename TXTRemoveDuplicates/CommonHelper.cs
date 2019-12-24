@@ -219,7 +219,7 @@ namespace TXTRemoveDuplicates
                         }
                         TxtWriter.WriteLine(item);
                     }
-                    UpdateInfo("数据导出成功!共 " + k + "条数据【" + ExportFilePath + "】");
+                    UpdateInfo("数据导出成功!共 " + k + "条数据【" + ExportFilePath + "】", true);
                 }
                 catch (Exception e)
                 {
