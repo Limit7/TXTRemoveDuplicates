@@ -239,7 +239,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(505, 24);
             this.label1.TabIndex = 14;
-            this.label1.Text = "TXT去重";
+            this.label1.Text = "TXT去重 limit7@vip.qq.com";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PnlParent
